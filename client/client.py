@@ -47,7 +47,7 @@ if __name__ == "__main__":
     parser.add_argument("--model_name",
                         type=str,
                         required=False,
-                        default="preprocess",
+                        default="ensemble_res50",
                         help="Model name")
     parser.add_argument("--image",
                         type=str,
@@ -56,7 +56,7 @@ if __name__ == "__main__":
     parser.add_argument("--url",
                         type=str,
                         required=False,
-                        default="172.16.10.239:8001",
+                        default="localhost:8001",
                         help="Inference server URL. Default is localhost:8001.")
     parser.add_argument('-v',
                         "--verbose",
@@ -83,8 +83,8 @@ if __name__ == "__main__":
 
     inputs = []
     outputs = []
-    input_name = "IMAGE_RAW"
-    output_names = ["IMAGE_PROCESS"]
+    input_name = "INPUT_ENSEMBLE"
+    output_names = ["OUTPUT_RES50","OUTPUT_FEATURE"]
     image_data = load_image(args.image)
     image_data = np.expand_dims(image_data, axis=0)
 
@@ -98,11 +98,11 @@ if __name__ == "__main__":
                                   inputs=inputs,
                                   outputs=outputs)
 
-    # output0_data = results.as_numpy(output_name)
-    # print(output0_data[0].shape)
+    output0_data = results.as_numpy(output_name)
+    print(output0_data[0].shape)
     # cv2.imwrite("a.jpg",output0_data[0])
-    im = Image.fromarray(results.as_numpy(output_name)[0])
-    im.save("your_file.jpeg")
+    # im = Image.fromarray(results.as_numpy(output_name)[0])
+    # im.save("your_file.jpeg")
 
     # maxs = np.argmax(output0_data, axis=1)
     # print(maxs)
