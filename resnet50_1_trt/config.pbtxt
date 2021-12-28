@@ -1,4 +1,4 @@
-name: "resnet50_trt"
+name: "resnet50_1_trt"
 platform: "tensorrt_plan"
 max_batch_size: 2
 input [
@@ -21,6 +21,6 @@ instance_group [
   {
     count: 1
     kind: KIND_GPU
-    gpus: [ 0 ]
+    gpus: [ 1 ]
   }
 ]

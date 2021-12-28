@@ -24,9 +24,9 @@
 # (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 # OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-name: "ensemble_res50"
+name: "ensemble_face"
 platform: "ensemble"
-max_batch_size: 2
+max_batch_size: 256
 input [
   {
     name: "IMAGE_RAW"
@@ -34,54 +34,31 @@ input [
     dims: [ -1 ]
   }
 ]
+
 output [
   {
-    name: "OUTPUT_RES50"
+    name: "IMAGE_PROCESS_FACE"
     data_type: TYPE_FP32
-    dims: [ 1000 ]
-  },
-  {
-    name: "OUTPUT_RES50_1"
-    data_type: TYPE_FP32
-    dims: [ 1000 ]
+    dims: [ 3, 112, 112 ]
   }
 ]
+
+
+
+
+
 ensemble_scheduling {
   step [
     {
-      model_name: "preprocess"
+      model_name: "preprocess_face"
       model_version: -1
       input_map {
         key: "IMAGE_RAW"
         value: "IMAGE_RAW"
       }
       output_map {
-        key: "IMAGE_PROCESS"
-        value: "IMAGE_PROCESS"
-      }
-    },
-    {
-      model_name: "resnet50_trt"
-      model_version: -1
-      input_map {
-        key: "input"
-        value: "IMAGE_PROCESS"
-      }
-      output_map {
-        key: "output"
-        value: "OUTPUT_RES50"
-      }
-    },
-    {
-      model_name: "resnet50_1_trt"
-      model_version: -1
-      input_map {
-        key: "input"
-        value: "IMAGE_PROCESS"
-      }
-      output_map {
-        key: "output"
-        value: "OUTPUT_RES50_1"
+        key: "IMAGE_PROCESS_FACE"
+        value: "IMAGE_PROCESS_FACE"
       }
     }
   ]

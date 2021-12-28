@@ -1,0 +1,20 @@
+name: "preprocess_face"
+backend: "python"
+max_batch_size: 256 
+input [
+{
+    name: "IMAGE_RAW"
+    data_type: TYPE_UINT8
+    dims: [ -1 ]
+}
+]
+ 
+output [
+{
+    name: "IMAGE_PROCESS_FACE"
+    data_type: TYPE_FP32
+    dims: [ 3, 112, 112 ]
+}
+]
+
+instance_group [{ kind: KIND_CPU }]
