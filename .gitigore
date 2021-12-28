@@ -1,0 +1,4 @@
+*.onnx
+*.pt
+*.engine
+*.plan
