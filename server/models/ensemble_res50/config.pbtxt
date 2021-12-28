@@ -36,14 +36,14 @@ input [
 ]
 output [
   {
-    name: "OUTPUT_ENSEMBLE_1"
+    name: "OUTPUT_RES50"
     data_type: TYPE_FP32
     dims: [ 1000 ]
   },
   {
-    name: "OUTPUT_ENSEMBLE_2"
+    name: "OUTPUT_FEATURE"
     data_type: TYPE_FP32
-    dims: [ 1000 ]
+    dims: [ 512 ]
   }
 ]
 ensemble_scheduling {
@@ -61,6 +61,20 @@ ensemble_scheduling {
       }
     },
     {
+     model_name: "preprocess_face"
+      model_version: -1
+      input_map {
+        key: "INPUT_PREPROCESS_FACE"
+        value: "INPUT_ENSEMBLE"
+      }
+      output_map {
+        key: "OUTPUT_PREPROCESS_FACE"
+        value: "IMAGE_PROCESSED_FACE"
+      }
+    },
+
+
+    {
       model_name: "resnet50_trt"
       model_version: -1
       input_map {
@@ -69,19 +83,19 @@ ensemble_scheduling {
       }
       output_map {
         key: "output"
-        value: "INPUT_ENSEMBLE"
+        value: "OUTPUT_RES50"
       }
     },
     {
-      model_name: "resnet50_1_trt"
+      model_name: "face_extraction"
       model_version: -1
       input_map {
-        key: "input
-        value: "INPUT_ENSEMBLE_1"
+        key: "input"
+        value: "IMAGE_PROCESSED_FACE"
       }
       output_map {
         key: "output"
-        value: "OUTPUT_ENSEMPLE_1"
+        value: "OUTPUT_FEATURE"
       }
     }
   ]

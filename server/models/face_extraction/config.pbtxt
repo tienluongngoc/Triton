@@ -1,6 +1,6 @@
-name: "resnet50_1_trt"
+name: "face_extraction"
 platform: "tensorrt_plan"
-max_batch_size: 256
+max_batch_size: 4
 input [
 {
     name: "input"
@@ -13,8 +13,8 @@ output[
 {
     name: "output"
     data_type: TYPE_FP32
-    dims: [ 1000 ]
-    label_filename: "labels.txt"
+    dims: [ 512 ]
+    #label_filename: "labels.txt"
 }
 ]
 instance_group [
