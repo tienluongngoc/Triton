@@ -28,7 +28,6 @@ import numpy as np
 import sys
 import json
 import io
-#import cv2
 
 # triton_python_backend_utils is available in every Triton Python model. You
 # need to use this module to create inference requests and responses. It also
@@ -67,7 +66,7 @@ class TritonPythonModel:
 
         # Get OUTPUT0 configuration
         output0_config = pb_utils.get_output_config_by_name(
-            model_config, "IMAGE_PROCESS_FACE")
+            model_config, "OUTPUT_PREPROCESS")
 
         # Convert Triton types to numpy types
         self.output0_dtype = pb_utils.triton_string_to_numpy(
@@ -101,13 +100,14 @@ class TritonPythonModel:
         # and create a pb_utils.InferenceResponse for each of them.
         for request in requests:
             # Get INPUT0
-            in_0 = pb_utils.get_input_tensor_by_name(request, "IMAGE_RAW")
+            in_0 = pb_utils.get_input_tensor_by_name(request, "INPUT_PREPROCESS")
 
-            img = in_0.as_numpy()
-            image = Image.open(io.BytesIO(img.tobytes()))
-            normalize = transforms.Normalize(mean=[127.5, 127.5, 127.5],
-                                             std=[128.0,128.0,128.0])
+            normalize = transforms.Normalize(mean=[0.485, 0.456, 0.406],
+                                             std=[0.229, 0.224, 0.225])
+
             loader = transforms.Compose([
+                transforms.Resize([224, 224]),
+                transforms.CenterCrop(224),
                 transforms.ToTensor(), normalize
             ])
 
@@ -117,10 +117,13 @@ class TritonPythonModel:
                 image = image.unsqueeze(0)
                 return image
 
+            img = in_0.as_numpy()
+
+            image = Image.open(io.BytesIO(img.tobytes()))
             img_out = image_loader(image)
             img_out = np.array(img_out)
 
-            out_tensor_0 = pb_utils.Tensor("IMAGE_PROCESS_FACE",
+            out_tensor_0 = pb_utils.Tensor("OUTPUT_PREPROCESS",
                                            img_out.astype(output0_dtype))
 
             # Create InferenceResponse. You can set an error here in case

@@ -29,19 +29,19 @@ platform: "ensemble"
 max_batch_size: 2
 input [
   {
-    name: "IMAGE_RAW"
+    name: "INPUT_ENSEMBLE"
     data_type: TYPE_UINT8
     dims: [ -1 ]
   }
 ]
 output [
   {
-    name: "OUTPUT_RES50"
+    name: "OUTPUT_ENSEMBLE_1"
     data_type: TYPE_FP32
     dims: [ 1000 ]
   },
   {
-    name: "OUTPUT_RES50_1"
+    name: "OUTPUT_ENSEMBLE_2"
     data_type: TYPE_FP32
     dims: [ 1000 ]
   }
@@ -52,12 +52,12 @@ ensemble_scheduling {
       model_name: "preprocess"
       model_version: -1
       input_map {
-        key: "IMAGE_RAW"
-        value: "IMAGE_RAW"
+        key: "INPUT_PREPROCESS"  
+        value: "INPUT_ENSEMBLE"
       }
       output_map {
-        key: "IMAGE_PROCESS"
-        value: "IMAGE_PROCESS"
+        key: "OUTPUT_PREPROCESS"
+        value: "IMAGE_PROCESSED"
       }
     },
     {
@@ -65,23 +65,23 @@ ensemble_scheduling {
       model_version: -1
       input_map {
         key: "input"
-        value: "IMAGE_PROCESS"
+        value: "IMAGE_PROCESSED"
       }
       output_map {
         key: "output"
-        value: "OUTPUT_RES50"
+        value: "INPUT_ENSEMBLE"
       }
     },
     {
       model_name: "resnet50_1_trt"
       model_version: -1
       input_map {
-        key: "input"
-        value: "IMAGE_PROCESS"
+        key: "input
+        value: "INPUT_ENSEMBLE_1"
       }
       output_map {
         key: "output"
-        value: "OUTPUT_RES50_1"
+        value: "OUTPUT_ENSEMPLE_1"
       }
     }
   ]

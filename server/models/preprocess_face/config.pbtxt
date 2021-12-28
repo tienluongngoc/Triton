@@ -3,7 +3,7 @@ backend: "python"
 max_batch_size: 256 
 input [
 {
-    name: "IMAGE_RAW"
+    name: "INPUT_PREPROCESS_FACE"
     data_type: TYPE_UINT8
     dims: [ -1 ]
 }
@@ -11,7 +11,7 @@ input [
  
 output [
 {
-    name: "IMAGE_PROCESS_FACE"
+    name: "OUTPUT_PREPROCESS_FACE"
     data_type: TYPE_FP32
     dims: [ 3, 112, 112 ]
 }
