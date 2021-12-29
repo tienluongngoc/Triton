@@ -5,7 +5,7 @@ input [
 {
     name: "INPUT_PREPROCESS_FACE"
     data_type: TYPE_UINT8
-    dims: [ -1 ]
+    dims: [112,112,3]
 }
 ]
  
@@ -13,7 +13,7 @@ output [
 {
     name: "OUTPUT_PREPROCESS_FACE"
     data_type: TYPE_FP32
-    dims: [ 3, 112, 112 ]
+    dims: [ 3,112, 112]
 }
 ]
 

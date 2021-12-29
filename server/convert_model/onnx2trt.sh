@@ -1,1 +1,1 @@
-/usr/src/tensorrt/bin/trtexec  --onnx=model.onnx --saveEngine=model.plan --explicitBatch --minShapes=input:1x3x224x224 --optShapes=input:4x3x224x224 --maxShapes=input:4x3x224x224 --fp16
+/usr/src/tensorrt/bin/trtexec  --onnx=iresnet18.onnx --saveEngine=model.plan --explicitBatch --minShapes=input:1x3x112x112 --optShapes=input:4x3x112x112 --maxShapes=input:4x3x112x112 --fp16

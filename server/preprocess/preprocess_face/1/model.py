@@ -28,6 +28,7 @@ import numpy as np
 import sys
 import json
 import io
+import cv2
 
 # triton_python_backend_utils is available in every Triton Python model. You
 # need to use this module to create inference requests and responses. It also
@@ -66,12 +67,17 @@ class TritonPythonModel:
 
         # Get OUTPUT0 configuration
         output0_config = pb_utils.get_output_config_by_name(
-            model_config, "OUTPUT_PREPROCESS")
+            model_config, "OUTPUT_PREPROCESS_FACE")
 
         # Convert Triton types to numpy types
         self.output0_dtype = pb_utils.triton_string_to_numpy(
             output0_config['data_type'])
 
+    def preprocess_image (self,batch_data):
+        #print(batch_data.shape)
+        batch_data=np.transpose(np.array(batch_data).astype("float64"), (0, 3, 1, 2))
+        aligned  = ((batch_data / 255.0) - 0.5)/0.5
+        return aligned
     def execute(self, requests):
         """`execute` MUST be implemented in every Python model. `execute`
         function receives a list of pb_utils.InferenceRequest as the only
@@ -100,32 +106,14 @@ class TritonPythonModel:
         # and create a pb_utils.InferenceResponse for each of them.
         for request in requests:
             # Get INPUT0
-            in_0 = pb_utils.get_input_tensor_by_name(request, "INPUT_PREPROCESS")
-
-            normalize = transforms.Normalize(mean=[0.485, 0.456, 0.406],
-                                             std=[0.229, 0.224, 0.225])
-
-            loader = transforms.Compose([
-                transforms.Resize([224, 224]),
-                transforms.CenterCrop(224),
-                transforms.ToTensor(), normalize
-            ])
-
-            def image_loader(image_name):
-                image = loader(image_name)
-                #expand the dimension to nchw
-                image = image.unsqueeze(0)
-                return image
-
-            img = in_0.as_numpy()
-
-            image = Image.open(io.BytesIO(img.tobytes()))
-            img_out = image_loader(image)
-            img_out = np.array(img_out)
-
-            out_tensor_0 = pb_utils.Tensor("OUTPUT_PREPROCESS",
-                                           img_out.astype(output0_dtype))
-
+            in_0 = pb_utils.get_input_tensor_by_name(request, "INPUT_PREPROCESS_FACE")
+            in_0_np = in_0.as_numpy()
+            #for image in in_0_np:
+            out_0_np=self.preprocess_image(in_0_np)
+            #out_0_np = np.stack(out_0_np)
+            print(out_0_np)
+            out_tensor_0 = pb_utils.Tensor("OUTPUT_PREPROCESS_FACE",
+                                           out_0_np.astype(output0_dtype))
             # Create InferenceResponse. You can set an error here in case
             # there was a problem with handling this inference request.
             # Below is an example of how you can set errors in inference
@@ -133,8 +121,7 @@ class TritonPythonModel:
             #
             # pb_utils.InferenceResponse(
             #    output_tensors=..., TritonError("An error occured"))
-            inference_response = pb_utils.InferenceResponse(
-                output_tensors=[out_tensor_0])
+            inference_response = pb_utils.InferenceResponse(output_tensors=[out_tensor_0])
             responses.append(inference_response)
 
         # You should return a list of pb_utils.InferenceResponse. Length

@@ -3,15 +3,15 @@ platform: "tensorrt_plan"
 max_batch_size: 4
 input [
 {
-    name: "input"
+    name: "input.1"
     data_type: TYPE_FP32
-    dims: [3, -1, -1 ]
+    dims: [3,-1, -1]
     
 }
 ]
 output[
 {
-    name: "output"
+    name: "267"
     data_type: TYPE_FP32
     dims: [ 512 ]
     #label_filename: "labels.txt"
