@@ -4,5 +4,7 @@
 
 ## install opencv
   pip3 install opencv-python
+  
   apt-get update
+  
   apt install -y libgl1-mesa-glx
