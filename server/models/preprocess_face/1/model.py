@@ -75,7 +75,8 @@ class TritonPythonModel:
 
     def preprocess_image (self,batch_data):
         #print(batch_data.shape)
-        batch_data=np.transpose(np.array(batch_data).astype("float64"), (0, 3, 1, 2))
+       
+        batch_data=np.transpose(np.array(batch_data).astype("float32"), (0, 3, 1, 2))
         aligned  = ((batch_data / 255.0) - 0.5)/0.5
         return aligned
     def execute(self, requests):
@@ -111,7 +112,9 @@ class TritonPythonModel:
             #for image in in_0_np:
             out_0_np=self.preprocess_image(in_0_np)
             #out_0_np = np.stack(out_0_np)
-            print(out_0_np)
+            print(out_0_np.flags['C_CONTIGUOUS'])
+            out_0_np=np.ascontiguousarray(out_0_np, dtype=np.float32)
+            #print(out_0_np.flags['C_CONTIGUOUS'])
             out_tensor_0 = pb_utils.Tensor("OUTPUT_PREPROCESS_FACE",
                                            out_0_np.astype(output0_dtype))
             # Create InferenceResponse. You can set an error here in case
