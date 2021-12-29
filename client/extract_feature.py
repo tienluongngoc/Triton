@@ -32,8 +32,29 @@ import tritongrpcclient
 import argparse
 import cv2
 from PIL import Image
+import backbones
+import torch
+import onnx
+import onnxruntime
+# run onnx
+# model = "model.onnx"
+# img = cv2.imread("aligned.jpg")
+# def prepare_model(aligned):
+#     aligned=np.expand_dims(aligned, axis=0)
+#     aligned = np.transpose(np.array(aligned).astype("float32"), (0, 3, 1, 2))
+#     aligned = ((aligned / 255.0) - 0.5)/0.5
+#     return aligned
 
+# data = json.dumps({'input.1': prepare_model(img).tolist()})
+# data = np.array(json.loads(data)['input.1']).astype('float32')
+# session = onnxruntime.InferenceSession(model, None)
+# input_name = session.get_inputs()[0].name
+# output_name = session.get_outputs()[0].name
+# result = session.run([output_name], {input_name: data})
+# prediction=np.array(result).squeeze()
+# print(prediction[:10])
 
+#========================================================================
 def load_image(img_path: str):
     """
     Loads an encoded image as an array of bytes.
@@ -56,7 +77,7 @@ if __name__ == "__main__":
     parser.add_argument("--url",
                         type=str,
                         required=False,
-                        default="172.16.10.239:8001",
+                        default="localhost:8001",
                         help="Inference server URL. Default is localhost:8001.")
     parser.add_argument('-v',
                         "--verbose",
@@ -87,9 +108,6 @@ if __name__ == "__main__":
     output_names = ["OUTPUT_FEATURE"]
     img = cv2.imread(args.image)
     img = np.expand_dims(img, axis=0)
-    
-
-   
 
     inputs.append(
         tritongrpcclient.InferInput(input_name, img.shape, "UINT8"))
@@ -102,7 +120,7 @@ if __name__ == "__main__":
                                   outputs=outputs)
 
     output0_data = results.as_numpy(output_name)
-    print("shape ",output0_data.shape)
+    print("shape ", output0_data.shape)
     print(output0_data[0][:10])
     # cv2.imwrite("a.jpg",output0_data[0])
     # im = Image.fromarray(results.as_numpy(output_name)[0])

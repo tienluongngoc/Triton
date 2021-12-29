@@ -56,7 +56,7 @@ if __name__ == "__main__":
     parser.add_argument("--url",
                         type=str,
                         required=False,
-                        default="172.16.10.239:8001",
+                        default="localhost:8001",
                         help="Inference server URL. Default is localhost:8001.")
     parser.add_argument('-v',
                         "--verbose",
