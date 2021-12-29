@@ -8,5 +8,5 @@
   apt-get update
   
   apt install -y libgl1-mesa-glx
-## Daly
+## Dali
   https://github.com/triton-inference-server/dali_backend/tree/main/docs/examples/resnet50_trt
