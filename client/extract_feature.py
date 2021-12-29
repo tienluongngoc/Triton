@@ -47,7 +47,7 @@ if __name__ == "__main__":
     parser.add_argument("--model_name",
                         type=str,
                         required=False,
-                        default="ensemble_res50",
+                        default="ensemble_face",
                         help="Model name")
     parser.add_argument("--image",
                         type=str,
@@ -84,24 +84,25 @@ if __name__ == "__main__":
     inputs = []
     outputs = []
     input_name = "INPUT_ENSEMBLE"
-    output_names = ["OUTPUT_RES50","OUTPUT_FEATURE"]
+    output_names = ["OUTPUT_FEATURE"]
     img = cv2.imread(args.image)
-    print(img.shape)
-    image_data = load_image(args.image)
-    image_data = np.expand_dims(image_data, axis=0)
-    print(image_data)
+    img = np.expand_dims(img, axis=0)
+    
+
+   
 
     inputs.append(
-        tritongrpcclient.InferInput(input_name, image_data.shape, "UINT8"))
+        tritongrpcclient.InferInput(input_name, img.shape, "UINT8"))
     for output_name in output_names:
         outputs.append(tritongrpcclient.InferRequestedOutput(output_name))
 
-    inputs[0].set_data_from_numpy(image_data)
+    inputs[0].set_data_from_numpy(img)
     results = triton_client.infer(model_name=args.model_name,
                                   inputs=inputs,
                                   outputs=outputs)
 
     output0_data = results.as_numpy(output_name)
+    print("shape ",output0_data.shape)
     print(output0_data[0][:10])
     # cv2.imwrite("a.jpg",output0_data[0])
     # im = Image.fromarray(results.as_numpy(output_name)[0])

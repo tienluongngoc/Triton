@@ -47,7 +47,7 @@ if __name__ == "__main__":
     parser.add_argument("--model_name",
                         type=str,
                         required=False,
-                        default="ensemble_res50",
+                        default="preprocess",
                         help="Model name")
     parser.add_argument("--image",
                         type=str,
@@ -83,14 +83,10 @@ if __name__ == "__main__":
 
     inputs = []
     outputs = []
-    input_name = "INPUT_ENSEMBLE"
-    output_names = ["OUTPUT_RES50","OUTPUT_FEATURE"]
-    img = cv2.imread(args.image)
-    print(img.shape)
+    input_name = "INPUT_PREPROCESS"
+    output_names = ["OUTPUT_PREPROCESS"]
     image_data = load_image(args.image)
     image_data = np.expand_dims(image_data, axis=0)
-    print(image_data)
-
     inputs.append(
         tritongrpcclient.InferInput(input_name, image_data.shape, "UINT8"))
     for output_name in output_names:
@@ -102,7 +98,7 @@ if __name__ == "__main__":
                                   outputs=outputs)
 
     output0_data = results.as_numpy(output_name)
-    print(output0_data[0][:10])
+    print(output0_data[0])
     # cv2.imwrite("a.jpg",output0_data[0])
     # im = Image.fromarray(results.as_numpy(output_name)[0])
     # im.save("your_file.jpeg")
