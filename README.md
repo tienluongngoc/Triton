@@ -20,3 +20,6 @@
     
     pip install --extra-index-url https://developer.download.nvidia.com/compute/redist --upgrade nvidia-dali-cuda110
   
+## install client triton
+
+    pip3 install tritonclient[all]
