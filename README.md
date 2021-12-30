@@ -23,3 +23,6 @@
 ## install client triton
 
     pip3 install tritonclient[all]
+## libb64.so.0d: cannot open shared object file
+
+    sudo apt-get install libb64-0d
