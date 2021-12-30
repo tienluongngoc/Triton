@@ -1,0 +1,18 @@
+ name: "preprocess_face_dali"
+ backend: "dali"
+ max_batch_size: 256
+ input [
+ {
+     name: "DALI_INPUT_FACE"
+     data_type: TYPE_UINT8
+     dims: [ 112,112,3 ]
+ }
+ ]
+
+ output [
+ {
+     name: "DALI_OUTPUT_FACE"
+     data_type: TYPE_FP32
+     dims: [ 3,112, 112]
+ }
+ ]

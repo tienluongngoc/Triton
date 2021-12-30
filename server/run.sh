@@ -1,1 +1,1 @@
-tritonserver --model-repository `pwd`/preprocess
+tritonserver --model-repository `pwd`/models

@@ -17,18 +17,31 @@ output [
 ]
 ensemble_scheduling {
   step [
+   # {
+   #  model_name: "preprocess_face"
+   #   model_version: -1
+   #   input_map {
+   #     key: "INPUT_PREPROCESS_FACE"
+   #     value: "INPUT_ENSEMBLE"
+   #   }
+   #   output_map {
+   #     key: "OUTPUT_PREPROCESS_FACE"
+   #     value: "IMAGE_PROCESSED_FACE"
+   #   }
+   # },
     {
-     model_name: "preprocess_face"
-      model_version: -1
-      input_map {
-        key: "INPUT_PREPROCESS_FACE"
+        model_name: "preprocess_face_dali"
+        model_version: -1
+        input_map {
+        key: "DALI_INPUT_FACE"
         value: "INPUT_ENSEMBLE"
       }
       output_map {
-        key: "OUTPUT_PREPROCESS_FACE"
+        key: "DALI_OUTPUT_FACE"
         value: "IMAGE_PROCESSED_FACE"
       }
     },
+
     {
       model_name: "face_extraction"
       model_version: -1
