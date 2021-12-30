@@ -37,22 +37,37 @@ import torch
 import onnx
 import onnxruntime
 # run onnx
-# model = "model.onnx"
-# img = cv2.imread("aligned.jpg")
-# def prepare_model(aligned):
-#     aligned=np.expand_dims(aligned, axis=0)
-#     aligned = np.transpose(np.array(aligned).astype("float32"), (0, 3, 1, 2))
-#     aligned = ((aligned / 255.0) - 0.5)/0.5
-#     return aligned
+model = "weights/model.onnx"
+img = cv2.imread("aligned.jpg")
 
-# data = json.dumps({'input.1': prepare_model(img).tolist()})
-# data = np.array(json.loads(data)['input.1']).astype('float32')
-# session = onnxruntime.InferenceSession(model, None)
-# input_name = session.get_inputs()[0].name
-# output_name = session.get_outputs()[0].name
-# result = session.run([output_name], {input_name: data})
-# prediction=np.array(result).squeeze()
-# print(prediction[:10])
+def cal_distance( feature1, feature2): # input f1,f2 output dis
+        return np.linalg.norm(feature1 - feature2)
+
+def distance(f1,f2): #f1,f2 numpy,raw
+    norm  = np.linalg.norm(f1, axis = 1, keepdims = True)
+    f1 = np.divide(f1, norm)
+    norm  = np.linalg.norm(f2, axis = 1, keepdims = True)
+    f2 = np.divide(f2, norm)
+    return cal_distance(f1,f2)
+
+
+
+def prepare_model(aligned):
+    aligned=np.expand_dims(aligned, axis=0)
+    aligned = np.transpose(np.array(aligned).astype("float32"), (0, 3, 1, 2))
+    aligned = ((aligned / 255.0) - 0.5)/0.5
+    return aligned
+
+data = json.dumps({'input.1': prepare_model(img).tolist()})
+data = np.array(json.loads(data)['input.1']).astype('float32')
+session = onnxruntime.InferenceSession(model, None)
+input_name = session.get_inputs()[0].name
+output_name = session.get_outputs()[0].name
+result = session.run([output_name], {input_name: data})
+f1=np.array(result).squeeze()
+f1=np.reshape(f1,(1,512))
+print(f1.shape)
+print(f1[0][:10])
 
 #========================================================================
 def load_image(img_path: str):
@@ -77,7 +92,7 @@ if __name__ == "__main__":
     parser.add_argument("--url",
                         type=str,
                         required=False,
-                        default="localhost:8001",
+                        default="172.16.10.239:8001",
                         help="Inference server URL. Default is localhost:8001.")
     parser.add_argument('-v',
                         "--verbose",
@@ -119,9 +134,11 @@ if __name__ == "__main__":
                                   inputs=inputs,
                                   outputs=outputs)
 
-    output0_data = results.as_numpy(output_name)
-    print("shape ", output0_data.shape)
-    print(output0_data[0][:10])
+    f2 = results.as_numpy(output_name)
+    print("shape ", f2.shape)
+    print(f2[0][:10])
+
+    print("DISTANCE : ",distance(f1,f2))
     # cv2.imwrite("a.jpg",output0_data[0])
     # im = Image.fromarray(results.as_numpy(output_name)[0])
     # im.save("your_file.jpeg")

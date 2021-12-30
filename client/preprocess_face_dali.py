@@ -47,7 +47,7 @@ if __name__ == "__main__":
     parser.add_argument("--model_name",
                         type=str,
                         required=False,
-                        default="preprocess_face",
+                        default="preprocess_face_dali",
                         help="Model name")
     parser.add_argument("--image",
                         type=str,
@@ -83,8 +83,8 @@ if __name__ == "__main__":
 
     inputs = []
     outputs = []
-    input_name = "INPUT_PREPROCESS_FACE"
-    output_names = ["OUTPUT_PREPROCESS_FACE"]
+    input_name = "DALI_INPUT_FACE"
+    output_names = ["DALI_OUTPUT_FACE"]
     img = cv2.imread(args.image)
     img = np.expand_dims(img, axis=0)
     inputs.append(

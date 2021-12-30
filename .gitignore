@@ -3,3 +3,4 @@
 *.pt
 *.engine
 *.plan
+*__cache__
