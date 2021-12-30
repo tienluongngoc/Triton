@@ -28,6 +28,7 @@ import torch
 import torchvision.models as models
 import argparse
 import os
+from torchsummary import summary
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
@@ -37,7 +38,16 @@ if __name__ == "__main__":
     resnet50 = models.resnet50(pretrained=True)
     dummy_input = torch.randn(1, 3, 224, 224)
     resnet50 = resnet50.eval()
+    print(resnet50)
+    #summary(resnet50,input_size=(3,224,224))
+    compiled_model = torch.jit.script(resnet50)
+    print(compiled_model)
+    traced_script_module = torch.jit.trace(compiled_model,dummy_input )
+    #print(traced_script_module.graph_for(dummy_input))
 
+
+
+    torch.jit.save(compiled_model, 'model.pt')
     torch.onnx.export(resnet50,
                       dummy_input,
                       args.save,

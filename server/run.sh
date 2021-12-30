@@ -1,1 +1,1 @@
-tritonserver --model-repository `pwd`/models
+tritonserver --model-repository `pwd`/models2
