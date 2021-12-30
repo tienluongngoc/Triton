@@ -26,3 +26,5 @@
 ## libb64.so.0d: cannot open shared object file
 
     sudo apt-get install libb64-0d
+## perf_analyzer
+    perf_analyzer -m res50_pytorch --percentile=95 --concurrency-range 1:8 --shape INPUT__0:3,224,224
