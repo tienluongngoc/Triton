@@ -29,10 +29,10 @@ infer_config {
       }
     ]
     trt_is {
-      model_name: "centerface"
+      model_name: "ensemble"
       version: -1
       model_repo {
-        root: "../"
+        root: "../models"
         log_level: 1
         tf_gpu_memory_fraction: 0.2
         tf_disable_soft_placement: 0
@@ -51,7 +51,7 @@ infer_config {
   }
 
   postprocess {
-    labelfile_path: "../centerface/centerface_labels.txt"
+    labelfile_path: "../models/centerface/centerface_labels.txt"
     detection {
       num_detected_classes: 1
       custom_parse_bbox_func: "NvDsInferParseCustomCenterNetFace"

@@ -22,8 +22,13 @@
 #include <cmath>
 #include <tuple>
 #include <memory>
-#include <opencv2/opencv.hpp>
+#include <algorithm>
+//#include <opencv2/opencv.hpp>
+#include<math.h>
 
+
+#define MIN(a,b) a<b?a:b
+#define MAX(a,b) a>b?a:b
 #define CLIP(a, min, max) (MAX(MIN(a, max), min))
 
 /* C-linkage to prevent name-mangling */

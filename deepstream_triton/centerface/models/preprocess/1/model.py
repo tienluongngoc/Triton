@@ -67,7 +67,7 @@ class TritonPythonModel:
 
         # Get OUTPUT0 configuration
         output0_config = pb_utils.get_output_config_by_name(
-            model_config, "o537")
+            model_config, "output.1")
 
         # Convert Triton types to numpy types
         self.output0_dtype = pb_utils.triton_string_to_numpy(
@@ -100,37 +100,14 @@ class TritonPythonModel:
         # and create a pb_utils.InferenceResponse for each of them.
         for request in requests:
             # Get INPUT0
-            in_0 = pb_utils.get_input_tensor_by_name(request, "537")
+            in_0 = pb_utils.get_input_tensor_by_name(request, "input.1")
             in_0_np = in_0.as_numpy()
-            in_1 = pb_utils.get_input_tensor_by_name(request, "538")
-            in_1_np = in_1.as_numpy()
-            in_2 = pb_utils.get_input_tensor_by_name(request, "539")
-            in_2_np = in_2.as_numpy()
-            in_3 = pb_utils.get_input_tensor_by_name(request, "540")
-            in_3_np = in_3.as_numpy()
-
-
-            out_tensor_0 = pb_utils.Tensor("o537",
-                                           in_0_np.astype(output0_dtype))
-            out_tensor_1 = pb_utils.Tensor("o538",
-                                           in_1_np.astype(output0_dtype))
-            out_tensor_2 = pb_utils.Tensor("o539",
-                                           in_2_np.astype(output0_dtype))
-            out_tensor_3 = pb_utils.Tensor("o540",
-                                           in_3_np.astype(output0_dtype))
-
-
-
-
-
-            # Create InferenceResponse. You can set an error here in case
-            # there was a problem with handling this inference request.
-            # Below is an example of how you can set errors in inference
-            # response:
-            #
-            # pb_utils.InferenceResponse(
-            #    output_tensors=..., TritonError("An error occured"))
-            inference_response = pb_utils.InferenceResponse(output_tensors=[out_tensor_0,out_tensor_1,out_tensor_2,out_tensor_3])
+            cv2.imwrite("/opt/nvidia/deepstream/deepstream-6.0/Triton/deepstream_triton/centerface/config/a.jpg",in_0_np)
+            print(in_0_np.shape)
+            with open('test.npy', 'wb') as f:
+                   np.save(f,in_0_np)
+            out_tensor=pb_utils.Tensor("output.1",in_0_np.astype(output0_dtype))
+            inference_response = pb_utils.InferenceResponse(output_tensors=[out_tensor])
             responses.append(inference_response)
 
         # You should return a list of pb_utils.InferenceResponse. Length
