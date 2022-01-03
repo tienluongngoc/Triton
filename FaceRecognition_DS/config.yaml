@@ -1,0 +1,10 @@
+RabbitMQ:
+  conn_str: "localhost;5672;guest;guest"
+Save:
+  size: [320, 640]
+  folder_save_path: "/home/haobk/Mydata/FaceRecognition_DS/build/data/" # nead "/" end line
+ 
+
+Source: 
+  source: ["file:///home/haobk/test.mp4","file:///home/haobk/hnh.mp4"]
+

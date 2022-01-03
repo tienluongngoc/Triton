@@ -1,0 +1,10 @@
+*.wts
+*.engine
+*.onnx
+data/*
+build
+*.pt
+*.pth
+*.pyc
+*.mp4
+*.o

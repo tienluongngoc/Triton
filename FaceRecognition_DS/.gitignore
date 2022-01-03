@@ -1,0 +1,14 @@
+*.mp4
+*.avi
+*.trt
+*.prototxt
+*.vscode
+*.uff
+*.o
+*.so
+*caffemodel
+*.engine
+*.onxx
+*.onnx
+*__pycache__
+*build

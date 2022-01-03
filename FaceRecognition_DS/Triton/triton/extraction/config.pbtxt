@@ -1,0 +1,26 @@
+name: "extraction"
+platform: "tensorrt_plan"
+max_batch_size: 8
+input [
+{
+    name: "input"
+    data_type: TYPE_FP32
+    dims: [3,112, 112]
+    
+}
+]
+output[
+{
+    name: "output"
+    data_type: TYPE_FP32
+    dims: [ 512 ]
+    #label_filename: "labels.txt"
+}
+]
+instance_group [
+  {
+    count: 1
+    kind: KIND_GPU
+    gpus: [ 0 ]
+  }
+]

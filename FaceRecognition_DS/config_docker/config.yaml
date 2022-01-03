@@ -1,0 +1,10 @@
+RabbitMQ:
+  conn_str: "192.168.0.102;5672;admin;admin"
+Save:
+  size: [320, 640]
+  folder_save_path: "/home/haobk/Mydata/FaceRecognition_DS/build/data/" # nead "/" end line
+ 
+
+Source: 
+  source: ["file:///opt/nvidia/deepstream/deepstream-6.0/FaceDS/test.mp4"]
+

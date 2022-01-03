@@ -1,0 +1,5 @@
+
+add_executable(facerecognition_ds_final facerecognition_ds_final.cpp )
+target_compile_features(facerecognition_ds_final PUBLIC cxx_std_17)
+
+target_link_libraries(facerecognition_ds_final PUBLIC deep_stream )
