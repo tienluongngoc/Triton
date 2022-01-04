@@ -1,0 +1,28 @@
+name: "preprocess_detect"
+backend: "python"
+max_batch_size: 8 
+input [
+{
+    name: "INPUT_PREPROCESS_FACE"
+    data_type: TYPE_UINT8
+    dims: [1080,1920,3]
+}
+]
+ 
+output [
+{
+    name: "OUTPUT_PREPROCESS_FACE"
+    data_type: TYPE_FP32
+    dims: [3, 640, 640]
+}
+
+{
+    name: "OUTPUT_SCALES"
+    data_type: TYPE_UINT8
+    dims: [1]
+}
+
+
+]
+
+instance_group [{ kind: KIND_CPU }]
