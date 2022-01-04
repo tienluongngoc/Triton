@@ -1,0 +1,1 @@
+/usr/src/tensorrt/bin/trtexec  --onnx=scrfd_2.5g_bnkps_dynamic.onnx --saveEngine=model.plan --explicitBatch --minShapes=input:1x3x640x640 --optShapes=input:4x3x640x640 --maxShapes=input:8x3x640x640 --fp16

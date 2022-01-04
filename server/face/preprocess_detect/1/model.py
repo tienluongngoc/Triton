@@ -80,6 +80,8 @@ class TritonPythonModel:
         self.input_size = [640, 640]
 
     def preprocess_image(self, img):
+        img = np.squeeze(img)
+        #print(img.shape)
         im_ratio = float(img.shape[0]) / img.shape[1]
         model_ratio = float(self.input_size[1]) / self.input_size[0]
         if im_ratio > model_ratio:
@@ -91,20 +93,21 @@ class TritonPythonModel:
         det_scale = float(new_height) / img.shape[0]
         resized_img = cv2.resize(img, (new_width, new_height))
 
-        return resized_img, det_scale
+        return resized_img,new_height,new_width,det_scale
 
     def preprocess_images(self, batch_data):
-        det_scales = np.zeros((batch_data.shape[0], 1), dtype=np.uint8)
-        det_imgs = np.zeros(
-            (batch_data.shape[0], self.input_size[1], self.input_size[0], 3), dtype=np.uint8)
+        #print("shape data ",batch_data.shape)
+        det_scales = np.zeros((batch_data.shape[0], 1))
+        det_imgs = np.zeros((batch_data.shape[0], self.input_size[1], self.input_size[0], 3), dtype=np.uint8)
         for i in range(batch_data.shape[0]):
-            resized_img, det_scale = self.preprocess_image(batch_data[i])
-            det_imgs[i] = resized_img
+            resized_img,new_height,new_width, det_scale = self.preprocess_image(batch_data[i])
+            det_imgs[i][:new_height, :new_width, :]=resized_img
             det_scales[i] = det_scale
 
-        input_size = tuple(det_imgs.shape[1:3][::-1])
+        input_size = (self.input_size[0],self.input_size[1])
+        
         blobs = cv2.dnn.blobFromImages(
-            det_imgs, 1.0/128, input_size, (127.5, 127.5, 127.5), swapRB=True)
+           det_imgs, 1.0/128, input_size, (127.5, 127.5, 127.5), swapRB=True)
         return blobs, det_scales
 
     def execute(self, requests):
@@ -140,7 +143,8 @@ class TritonPythonModel:
                 request, "INPUT_PREPROCESS_FACE")
             in_0_np = in_0.as_numpy()
             # for image in in_0_np:
-            blobs, det_scales = self.preprocess_image(in_0_np)
+            blobs, det_scales = self.preprocess_images(in_0_np)
+            print(det_scales)
             #out_0_np = np.stack(out_0_np)
             # print(out_0_np.flags['C_CONTIGUOUS'])
             out_0_np = np.ascontiguousarray(blobs, dtype=np.float32)

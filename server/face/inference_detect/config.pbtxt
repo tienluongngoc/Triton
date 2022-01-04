@@ -1,0 +1,68 @@
+name: "inference_detect"
+platform: "tensorrt_plan"
+max_batch_size: 8
+input [
+{
+    name: "input.1"
+    data_type: TYPE_FP32
+    dims: [3,-1,-1 ]
+    
+}
+]
+
+output[
+{
+    name: "score_8"
+    data_type: TYPE_FP32
+    dims: [-1,1]
+},
+
+{
+    name: "score_16"
+    data_type: TYPE_FP32
+    dims: [-1,1]
+},
+{
+    name: "score_32"
+    data_type: TYPE_FP32
+    dims: [-1,1]
+},
+
+{
+    name: "bbox_8"
+    data_type: TYPE_FP32
+    dims: [-1,4]
+},
+{
+    name: "bbox_16"
+    data_type: TYPE_FP32
+    dims: [-1,4]
+},
+{
+    name: "bbox_32"
+    data_type: TYPE_FP32
+    dims: [-1,4]
+},
+{ 
+    name: "kps_8"
+    data_type: TYPE_FP32
+    dims: [-1,10]  
+},
+{
+    name: "kps_16"
+    data_type: TYPE_FP32
+    dims: [-1,10]
+},
+{
+    name: "kps_32"
+    data_type: TYPE_FP32
+    dims: [-1,10]
+}
+]
+instance_group [
+  {
+    count: 1
+    kind: KIND_GPU
+    gpus: [ 0 ]
+  }
+]
